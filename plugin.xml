@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:rim="http://www.blackberry.com/ns/widgets"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="com.orangeguava.oauth2plugin"
+    version="0.0.1">
+    <name>OAuth2 Plugin</name>
+    <description>OAuth2 Plugin</description>
+    <license>Apache</license>
+    <keywords>cordova,oauth2</keywords>
+
+	<engines>
+		<engine name="cordova" version=">=3.5.0" />
+	</engines>
+
+    <js-module src="cordova/oauth2plugin.js" name="OAuth2Plugin">
+    	<clobbers target="window.OAuth2Plugin" />
+    </js-module>
+
+    <!-- ios -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="OAuth2Plugin">
+                <param name="ios-package" value="OAuth2Plugin" onload="true" />
+            </feature>
+        </config-file>
+
+
+        <header-file src="Source/GTMOAuth2Authentication.h" />
+        <source-file src="Source/GTMOAuth2Authentication.m" />
+
+        <header-file src="Source/GTMOAuth2SignIn.h" />
+        <source-file src="Source/GTMOAuth2SignIn.m" />
+
+        <header-file src="HTTPFetcher/GTMHTTPFetcher.h" />
+        <source-file src="HTTPFetcher/GTMHTTPFetcher.m" />
+
+
+        <header-file src="Source/Touch/GTMOAuth2ViewControllerTouch.h" />
+        <source-file src="Source/Touch/GTMOAuth2ViewControllerTouch.m" />
+        <header-file src="cordova/OAuth2Plugin.h" />
+        <source-file src="cordova/OAuth2Plugin.m" />
+        <resource-file src="Source/Touch/GTMOAuth2ViewTouch.xib" />
+
+    </platform>
+
+</plugin>
