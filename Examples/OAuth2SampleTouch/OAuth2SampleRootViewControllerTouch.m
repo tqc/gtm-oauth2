@@ -25,8 +25,8 @@ static NSString *const kShouldSaveInKeychainKey = @"shouldSaveInKeychain";
 static NSString *const kDailyMotionAppServiceName = @"OAuth Sample: DailyMotion";
 static NSString *const kDailyMotionServiceName = @"DailyMotion";
 
-static NSString *const kSampleClientIDKey = @"clientID";
-static NSString *const kSampleClientSecretKey = @"clientSecret";
+//static NSString *const kSampleClientIDKey = @"clientID";
+//static NSString *const kSampleClientSecretKey = @"clientSecret";
 
 @interface OAuth2SampleRootViewControllerTouch()
 - (void)viewController:(GTMOAuth2ViewControllerTouch *)viewController
