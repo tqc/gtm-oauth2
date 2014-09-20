@@ -30,7 +30,7 @@
 }
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
-  [mWindow addSubview:[mNavigationController view]];
+  [mWindow setRootViewController:mNavigationController];
   [mWindow makeKeyAndVisible];
 }
 

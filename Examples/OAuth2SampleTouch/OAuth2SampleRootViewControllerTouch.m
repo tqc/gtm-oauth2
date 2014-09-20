@@ -316,8 +316,18 @@ static NSString *const kDailyMotionClientSecretKey = @"DailyMotionClientSecret";
   NSString *html = @"<html><body bgcolor=silver><div align=center>Loading sign-in page...</div></body></html>";
   viewController.initialHTMLString = html;
 
-  [[self navigationController] pushViewController:viewController animated:YES];
-
+    viewController.popViewBlock=^{
+        [self.navigationController dismissViewControllerAnimated:viewController completion:nil];
+    };
+    
+    if ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ) {
+        viewController.modalPresentationStyle =  UIModalPresentationFormSheet;
+    }
+    else {
+        viewController.modalPresentationStyle =  UIModalPresentationOverFullScreen;
+    }
+    [ self presentViewController:viewController animated:YES completion:nil];
+    
   // The view controller will be popped before signing in has completed, as
   // there are some additional fetches done by the sign-in controller.
   // The kGTMOAuth2UserSignedIn notification will be posted to indicate
@@ -384,7 +394,19 @@ static NSString *const kDailyMotionClientSecretKey = @"DailyMotionClientSecret";
   // You can set the title of the navigationItem of the controller here, if you want
 
   // Now push our sign-in view
-  [[self navigationController] pushViewController:viewController animated:YES];
+    
+    viewController.popViewBlock=^{
+        [self dismissViewControllerAnimated:viewController completion:nil];
+    };
+    
+    if ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ) {
+        viewController.modalPresentationStyle =  UIModalPresentationFormSheet;
+    }
+    else {
+        viewController.modalPresentationStyle =  UIModalPresentationOverFullScreen;
+    }
+    [ self presentViewController:viewController animated:YES completion:nil];
+    
 }
 
 - (void)viewController:(GTMOAuth2ViewControllerTouch *)viewController
