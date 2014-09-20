@@ -169,6 +169,10 @@ typedef void (^GTMOAuth2ViewControllerCompletionHandler)(GTMOAuth2ViewController
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *rightBarButtonItem;
 @property (nonatomic, retain) IBOutlet UIWebView *webView;
 
+@property (nonatomic, retain) IBOutlet UINavigationItem *navigationItem;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *leftBarButtonItem;
+
+
 #if NS_BLOCKS_AVAILABLE
 // An optional block to be called when the view should be popped. If not set,
 // the view controller will use its navigation controller to pop the view.

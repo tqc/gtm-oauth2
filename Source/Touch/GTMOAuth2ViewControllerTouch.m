@@ -52,7 +52,9 @@ static GTMOAuth2Keychain* gGTMOAuth2DefaultKeychain = nil;
             backButton = backButton_,
             forwardButton = forwardButton_,
             navButtonsView = navButtonsView_,
-            rightBarButtonItem = rightBarButtonItem_,
+rightBarButtonItem = rightBarButtonItem_,
+leftBarButtonItem,
+navigationItem,
             webView = webView_,
             initialActivityIndicator = initialActivityIndicator_;
 
@@ -382,8 +384,9 @@ static GTMOAuth2Keychain* gGTMOAuth2DefaultKeychain = nil;
 }
 
 - (void)setUpNavigation {
-  rightBarButtonItem_.customView = navButtonsView_;
-  self.navigationItem.rightBarButtonItem = rightBarButtonItem_;
+    leftBarButtonItem.target = self;
+    leftBarButtonItem.action = @selector(popView);
+    
 }
 
 - (void)popView {
