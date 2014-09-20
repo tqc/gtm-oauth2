@@ -147,13 +147,57 @@
     // Display the authentication view
     GTMOAuth2ViewControllerTouch *viewController;
     
-    SEL sel = @selector(viewController:finishedWithAuth:error:);
-
     viewController = [GTMOAuth2ViewControllerTouch controllerWithAuthentication:auth
                                                                authorizationURL:authURL
                                                                keychainItemName:self.keychainName
-                                                                       delegate:self
-                                                               finishedSelector:sel];
+                                                              completionHandler: ^(GTMOAuth2ViewControllerTouch* vc, GTMOAuth2Authentication* auth,  NSError* error){
+                                                                  if (error != nil) {
+                                                                      // Authentication failed (perhaps the user denied access, or closed the
+                                                                      // window before granting access)
+                                                                      NSLog(@"Authentication error: %@", error);
+                                                                      NSData *responseData = [[error userInfo] objectForKey:@"data"]; // kGTMHTTPFetcherStatusDataKey
+                                                                      if ([responseData length] > 0) {
+                                                                          // show the body of the server's authentication failure response
+                                                                          NSString *str = [[NSString alloc] initWithData:responseData
+                                                                                                                encoding:NSUTF8StringEncoding];
+                                                                          NSLog(@"%@", str);
+                                                                      }
+                                                                      
+                                                                      [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Not Authenticated"] callbackId:command.callbackId];
+
+                                                                      
+                                                                      self.auth = nil;
+                                                                  } else {
+                                                                      NSLog(@"Authentication succeeded");
+                                                                      
+                                                                      NSLog(@"Access token is %@", auth.accessToken);
+                                                                      
+                                                                      [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:auth.accessToken] callbackId:command.callbackId];
+
+                                                                      // Authentication succeeded
+                                                                      //
+                                                                      // At this point, we either use the authentication object to explicitly
+                                                                      // authorize requests, like
+                                                                      //
+                                                                      //  [auth authorizeRequest:myNSURLMutableRequest
+                                                                      //       completionHandler:^(NSError *error) {
+                                                                      //         if (error == nil) {
+                                                                      //           // request here has been authorized
+                                                                      //         }
+                                                                      //       }];
+                                                                      //
+                                                                      // or store the authentication object into a fetcher or a Google API service
+                                                                      // object like
+                                                                      //
+                                                                      //   [fetcher setAuthorizer:auth];
+                                                                      
+                                                                      // save the authentication object
+                                                                      self.auth = auth;
+                                                                  }
+
+                                                              
+                                                              }
+                      ];
 
     viewController.webView.backgroundColor = [UIColor greenColor];
     // Now push our sign-in view
@@ -178,50 +222,6 @@
     self.auth = nil;
 }
 
-
-- (void)viewController:(GTMOAuth2ViewControllerTouch *)viewController
-      finishedWithAuth:(GTMOAuth2Authentication *)auth
-                 error:(NSError *)error {
-    if (error != nil) {
-        // Authentication failed (perhaps the user denied access, or closed the
-        // window before granting access)
-        NSLog(@"Authentication error: %@", error);
-        NSData *responseData = [[error userInfo] objectForKey:@"data"]; // kGTMHTTPFetcherStatusDataKey
-        if ([responseData length] > 0) {
-            // show the body of the server's authentication failure response
-            NSString *str = [[NSString alloc] initWithData:responseData
-                                                   encoding:NSUTF8StringEncoding];
-            NSLog(@"%@", str);
-        }
-        
-        self.auth = nil;
-    } else {
-        NSLog(@"Authentication succeeded");
-        
-        NSLog(@"Access token is %@", auth.accessToken);
-        // Authentication succeeded
-        //
-        // At this point, we either use the authentication object to explicitly
-        // authorize requests, like
-        //
-        //  [auth authorizeRequest:myNSURLMutableRequest
-        //       completionHandler:^(NSError *error) {
-        //         if (error == nil) {
-        //           // request here has been authorized
-        //         }
-        //       }];
-        //
-        // or store the authentication object into a fetcher or a Google API service
-        // object like
-        //
-        //   [fetcher setAuthorizer:auth];
-        
-        // save the authentication object
-        self.auth = auth;
-    }
-    
-  //  [self updateUI];
-}
 
 // //////////////////////////////////////////////////
 

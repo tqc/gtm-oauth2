@@ -19,16 +19,17 @@
         };
 
 
-        this.signIn = function() {
-            exec(null, null, "OAuth2Plugin", "signInToCustomService", []);
+        this.signIn = function(callback) {
+            exec(function(token) {
+                if (callback) callback(null, token);
+            }, function(err) {
+                if (callback) callback(err || "Error");
+            }, "OAuth2Plugin", "signInToCustomService", []);
         };
 
         this.signOut = function() {
             exec(null, null, "OAuth2Plugin", "signOut", []);
         };
-
-
-
     };
 
     module.exports = window.OAuth2Plugin = new OAuth2Plugin();
